@@ -1,0 +1,28 @@
+service: s3handler
+provider:
+  name: aws
+  runtime: python2.7
+  stage: dev
+  region: us-east-1
+  deploymentBucket:
+    name: ecor-rouge-serverless-packages
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:*"
+      Resource: "*"
+custom:
+  s3BucketCheck: ecor-rouge-work
+functions:
+  move2bucket:
+    handler: s3handler.run
+    events:
+      - existingS3:
+          bucket: ${self:custom.s3BucketCheck}
+          events:
+            - s3:ObjectCreated:*
+          rules:
+            - prefix: /Incoming/
+
+resources:
+  Description: "The AWS CloudFormation template for deploying lambda function to move file to another s3 bucket"

@@ -1,1 +1,0 @@
-# Serverless S3 File Handler
