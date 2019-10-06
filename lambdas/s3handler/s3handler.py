@@ -16,6 +16,10 @@ def run(event, context):
     except (ValueError, KeyError) as e:
         print('error getting input file for processing:{}'.format(e))
         return {'status': 'error'}
+    key_tokens = trigger_key.split('/')
+    if len(key_tokens) < 2 or not key_tokens[1]:
+        print('input file {} is invalid'.format(trigger_key))
+        return {'status': 'error'}
     # # if necessary, you can further analyze the file for compliance with the pattern
     # if not re.match(s3input_folder+'/'+r'pattern\d{2}_end.json', trigger_key):
     #     message = 'the file {} does not match the pattern'.format(trigger_key)
@@ -27,7 +31,7 @@ def run(event, context):
     if isinstance(input_json, dict):
         input_json['processed_value'] = 'processed_value_{}'.format(int(time.time()))
     new_key = s3output_folder+'/' + '/'.join(trigger_key.split('/')[1:])
-    if not save_s3_file(input_json, new_key):
+    if not save_s3_file(json.dumps(input_json), new_key):
         return {'status': 'error'}
     print('file {} processed and saved to folder {}'.format(trigger_key, s3output_folder))
     return {'status': 'ok'}

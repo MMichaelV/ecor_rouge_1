@@ -13,6 +13,10 @@ provider:
       Resource: "*"
 custom:
   s3BucketCheck: ecor-rouge-work
+package:
+  exclude:
+    - node_modules/*
+    - package*
 functions:
   move2bucket:
     handler: s3handler.run
@@ -22,7 +26,7 @@ functions:
           events:
             - s3:ObjectCreated:*
           rules:
-            - prefix: /Incoming/
+            - prefix: Incoming/
 
 resources:
   Description: "The AWS CloudFormation template for deploying lambda function to move file to another s3 bucket"
