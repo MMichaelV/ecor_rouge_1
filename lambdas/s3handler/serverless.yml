@@ -21,10 +21,9 @@ functions:
   move2bucket:
     handler: s3handler.run
     events:
-      - S3:
+      - s3:
           bucket: ${self:custom.s3BucketCheck}
-          events:
-            - s3:ObjectCreated:*
+          event: s3:ObjectCreated:*
           rules:
             - prefix: Incoming/
           existing: true
